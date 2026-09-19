@@ -1,0 +1,80 @@
+@page
+@model ZutrittsAuswertung.Pages.IndexModel
+
+<form method="get" class="filter-form">
+    <div class="filter-row">
+        <label>
+            Von
+            <input type="date" name="Von" value="@Model.Von?.ToString("yyyy-MM-dd")" />
+        </label>
+        <label>
+            Bis
+            <input type="date" name="Bis" value="@Model.Bis?.ToString("yyyy-MM-dd")" />
+        </label>
+        <label>
+            Suche (Name oder Kartennummer)
+            <input type="text" name="Suche" value="@Model.Suche" placeholder="z. B. Krüger oder 150A5D63" />
+        </label>
+        <label>
+            Status
+            <select name="Status">
+                <option value="alle" selected="@(Model.Status == "alle")">Alle</option>
+                <option value="erlaubt" selected="@(Model.Status == "erlaubt")">Nur erlaubt</option>
+                <option value="verweigert" selected="@(Model.Status == "verweigert")">Nur verweigert</option>
+            </select>
+        </label>
+        <button type="submit">Suchen</button>
+    </div>
+</form>
+
+<p class="summary">
+    @Model.Ergebnisse.Count Zutritte im Zeitraum
+    (<span class="ok">@Model.AnzahlErlaubt erlaubt</span>,
+    <span class="fail">@Model.AnzahlVerweigert verweigert</span>)
+</p>
+
+<table class="results">
+    <thead>
+        <tr>
+            <th>Zeitpunkt</th>
+            <th>Name</th>
+            <th>Karte</th>
+            <th>Gruppe</th>
+            <th>Status</th>
+            <th>Beitrag</th>
+            <th>Hinweis</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var eintrag in Model.Ergebnisse)
+        {
+            <tr class="@(eintrag.Allowed ? "row-ok" : "row-fail")">
+                <td>@eintrag.Timestamp.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                <td>@eintrag.Name</td>
+                <td>@eintrag.CardId</td>
+                <td>@eintrag.GroupName</td>
+                <td>@(eintrag.Allowed ? "erlaubt" : "verweigert")</td>
+                <td>
+                    @if (eintrag.FreeAccess)
+                    {
+                        <span>Frei-Zugang</span>
+                    }
+                    else
+                    {
+                        @eintrag.PaymentStatus
+                        @if (eintrag.OpenAmount.HasValue && eintrag.OpenAmount.Value > 0)
+                        {
+                            <span class="warn"> (@eintrag.OpenAmount.Value.ToString("0.00") &euro; offen)</span>
+                        }
+                    }
+                </td>
+                <td>@eintrag.AttentionStatus</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Ergebnisse.Count == 0)
+{
+    <p class="empty">Keine Zutritte im gewählten Zeitraum/Filter gefunden.</p>
+}

@@ -1,0 +1,18 @@
+name: "Zutritts-Auswertung"
+version: "1.0.0"
+slug: "zutrittsauswertung"
+description: "Filterbare Auswertungsmaske für die FEIG/myaxxess-Zutritte (Mitglieder + Zutritts-Log)"
+url: ""
+arch:
+  - aarch64
+  - armv7
+  - amd64
+init: false
+startup: application
+boot: auto
+map:
+  - share:ro
+ports:
+  5080/tcp: 5080
+ports_description:
+  5080/tcp: "Web-Oberfläche der Zutritts-Auswertung"
