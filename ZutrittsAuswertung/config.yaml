@@ -2,10 +2,9 @@ name: "Zutritts-Auswertung"
 version: "1.0.0"
 slug: "zutrittsauswertung"
 description: "Filterbare Auswertungsmaske für die FEIG/myaxxess-Zutritte (Mitglieder + Zutritts-Log)"
-url: ""
+url: "https://github.com/Testwilli1966/ZutrittsAuswertung"
 arch:
   - aarch64
-  - armv7
   - amd64
 init: false
 startup: application
